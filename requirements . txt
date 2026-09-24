@@ -1,1 +1,3 @@
-uvicon[standard] httpx python-dotenv
+uvicon[standard]
+httpx
+python-dotenv
