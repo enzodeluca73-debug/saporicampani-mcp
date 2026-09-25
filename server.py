@@ -21,7 +21,7 @@ def home():
 def health():
     return jsonify({"status": "ok"})  
 
-@app.route("/mcp", methobs=["GET"])
+@app.route("/mcp", methods=["GET"])
 def mcp():
     return jsonify({"status": "ok"})
 
