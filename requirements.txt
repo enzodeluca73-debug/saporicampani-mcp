@@ -1,0 +1,5 @@
+uvicorn[standard]
+httpx
+python-dotenv
+flask
+requests
