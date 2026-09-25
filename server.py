@@ -1,4 +1,4 @@
-aimport os
+import os
 from flask import Flask, jsonify, request
 import requests
 from requests.auth import HTTPBasicAuth
