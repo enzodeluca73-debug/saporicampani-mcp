@@ -19,8 +19,11 @@ def home():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok"})  
 
+@app.route("/mcp", methobs=["GET"])
+def mcp():
+    return jsonify({"status": "ok"})
 
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_product(product_id):
