@@ -20,8 +20,8 @@ def home():
 
      
 
-from mcp.server.fastmcp import FastMCP
-mcp = FastMCP("saporicampani",stateless_http=true)
+from mcp.server.fastmcp import MCPServer
+mcp = MCPServer("saporicampani",stateless_http=true)
 @mcp.tool()    
 def get_product_mcp(product_id: int):
     return get_product(product_id)
