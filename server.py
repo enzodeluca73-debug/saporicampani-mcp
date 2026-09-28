@@ -20,11 +20,27 @@ def home():
 
      
 
-from mcp.server import MCPServer
-mcp = MCPServer("saporicampani")
+from mcp.server.fastmcp import FastMC
+mcp = FastMCP("saporicampani",host="0.0.0.0",port=int(os.environ.get("port",10000)))
 @mcp.tool()    
 def get_product_mcp(product_id: int):
-    return get_product(product_id)
+    return{"product_id": product_id} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_product(product_id):
     if not PRESTASHOP_API_KEY:
@@ -48,5 +64,5 @@ def get_product(product_id):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    mcp.run(transport="streamable-http",host="0.0.0.0",port=port)
     
