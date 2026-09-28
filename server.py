@@ -20,8 +20,8 @@ def home():
 
      
 
-from mcp.server.fastmcp import FastMC
-mcp = FastMCP("saporicampani",host="0.0.0.0",port=int(os.environ.get("port",10000)))
+from mcp.server.mcpserver import MPCServer
+mpc=MCPServer("saporicampani")
 @mcp.tool()    
 def get_product_mcp(product_id: int):
     return{"product_id": product_id} 
@@ -64,5 +64,5 @@ def get_product(product_id):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    mcp.run(transport="streamable-http",host="0.0.0.0",port=port)
+    mcp.run(transport="streamable-http",host="0.0.0.0", port=port)
     
