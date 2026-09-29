@@ -20,7 +20,7 @@ def home():
 
      
 
-from mcp.server.mcpserver import MCPServer
+from mcp.server import MCPServer
 mpc=MCPServer("saporicampani")
 @mcp.tool()    
 def get_product_mcp(product_id: int):
