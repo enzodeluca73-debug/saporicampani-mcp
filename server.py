@@ -33,8 +33,7 @@ def get_product_mcp(product_id: int):
         params={"output_format": "JSON"},
         auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
         timeout=30
-    )
-    return response.json()   
+    )    return {"status_code": response.status_code, "content_type": response.headers.get("Content-Type"), "body": response.text}
 
 
 
