@@ -8,7 +8,9 @@ app = Flask(__name__)
 PRESTASHOP_URL = os.environ.get("PRESTASHOP_URL", "https://www.saporicampani.it")
 PRESTASHOP_API_KEY = os.environ.get("PRESTASHOP_API_KEY")
 
-
+@app.route("/health",methods=["GET"])
+def health():
+    return jsonify({"status": "ok"})
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
