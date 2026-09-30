@@ -24,7 +24,17 @@ from mcp.server import MCPServer
 mcp=MCPServer("saporicampani")
 @mcp.tool()    
 def get_product_mcp(product_id: int):
-    return{"product_id": product_id} 
+    if not PRESTASHOP_API_KEY:
+        return {"error": "PRESTASHOP_API_KEY non configurata"}
+
+    url = f"{PRESTASHOP_URL}/api/products/{product_id}"
+    response = requests.get(
+        url,
+        params={"output_format": "JSON"},
+        auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
+        timeout=30
+    )
+    return response.json()   
 
 
 
