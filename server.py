@@ -48,7 +48,7 @@ def test_prestashop():
         auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
         timeout=30
 )
-return {"ok":response.status_code == 200,"status_code":response.status_code}
+    return {"ok":response.status_code == 200,"status_code":response.status_code}
     
 
 
