@@ -41,7 +41,7 @@ def get_product_mcp(product_id: int):
                                                                                      ), "body": response.text}
 @mcp.tool()
 def test_prestashop():
-    url = f"é{PRESTASHOP_URL}/api/products/64
+    url = f"{PRESTASHOP_URL}/api/products/64"
     response = requests.get(
         url,
         params={"output_format":"json"},
