@@ -36,11 +36,20 @@ def get_product_mcp(product_id: int):
         auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
         timeout=30
     )   
-    return {"status_code": response.status_code, "content_type": response.headers.get("Content-Type"), "body": response.text}
-
-
-
-
+    return {"status_code": response.status_code, "content_type": response.headers.get("Content-Type"
+                                                                                     
+                                                                                     ), "body": response.text}
+@mcp.tool()
+def test_prestashop():
+    url = f"é{PRESTASHOP_URL}/api/products/64
+    response = requests.get(
+        url,
+        params={"output_format":"json"},
+        auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
+        timeout=30
+)
+return {"ok":response.status_code == 200,"status_code":response.status_code}
+    
 
 
 
