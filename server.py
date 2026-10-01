@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 app = Flask(__name__)
 
-PRESTASHOP_URL = os.environ.get("PRESTASHOP_URL", "https://www.saporicampani.it")
+PRESTASHOP_URL = os.environ.get("PRESTASHOP_URL", "https://saporicampani.it")
 PRESTASHOP_API_KEY = os.environ.get("PRESTASHOP_API_KEY")
 
 @app.route("/health",methods=["GET"])
