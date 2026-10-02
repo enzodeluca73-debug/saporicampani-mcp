@@ -83,6 +83,32 @@ def get_product(product_id):
     )
 
 
+
+@mcp.tool()
+def update_product(product_id: int, field: str, value: str):
+    url = f"{PRESTASHOP_URL}/api/products/{product_id}"
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<prestashop>
+<product>
+<id>{product_id}</id>
+<{field}>{value}</{field}>
+</product>
+</prestashop>"""
+
+    response = requests.patch(
+        url,
+        data=xml.encode("utf-8"),
+        auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
+        headers={"Content-Type": "application/xml"},
+        timeout=30
+    )
+
+    return {
+        "ok": response.status_code in (200, 201),
+        "status_code": response.status_code,
+        "response": response.text
+    }
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     mcp.run(transport="streamable-http",host="0.0.0.0", port=port)
