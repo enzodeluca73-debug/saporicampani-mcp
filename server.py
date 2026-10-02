@@ -90,21 +90,48 @@ def update_product(product_id: int, field: str, value: str):
         return {"error": "PRESTASHOP_API_KEY non configurata"}
 
     url = f"{PRESTASHOP_URL}/api/products/{product_id}"
+    auth = HTTPBasicAuth(PRESTASHOP_API_KEY, "")
 
-    # PrestaShop supports PATCH for partial resource updates.
-    # This avoids resending required fields (for example price) when
-    # only one product field needs to be changed.
+    # Read the current resource first, then PUT it back with only the
+    # requested field changed. PrestaShop requires mandatory fields
+    # (such as price) to remain present in a PUT update.
+    get_response = requests.get(
+        url,
+        auth=auth,
+        timeout=30
+    )
+    if get_response.status_code != 200:
+        return {
+            "ok": False,
+            "status_code": get_response.status_code,
+            "response": get_response.text
+        }
+
     import xml.etree.ElementTree as ET
-    root = ET.Element("prestashop")
-    product = ET.SubElement(root, "product")
-    ET.SubElement(product, "id").text = str(product_id)
-    ET.SubElement(product, field).text = str(value)
-    xml = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    try:
+        root = ET.fromstring(get_response.content)
+        product = root.find("product")
+        if product is None:
+            return {"ok": False, "status_code": 500, "response": "Product node not found"}
 
-    response = requests.patch(
+        target = product.find(field)
+        if target is None:
+            target = ET.SubElement(product, field)
+        target.text = str(value)
+
+        # Remove read-only associations from the update payload.
+        associations = product.find("associations")
+        if associations is not None:
+            product.remove(associations)
+
+        xml = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    except Exception as exc:
+        return {"ok": False, "status_code": 500, "response": f"XML error: {exc}"}
+
+    response = requests.put(
         url,
         data=xml,
-        auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
+        auth=auth,
         headers={"Content-Type": "application/xml"},
         timeout=30
     )
