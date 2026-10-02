@@ -87,7 +87,13 @@ def get_product(product_id):
 @mcp.tool()
 def update_product(product_id: int, field: str, value: str):
     url = f"{PRESTASHOP_URL}/api/products/{product_id}"
-
+    get_response = requests.get(
+        url,
+        auth=HTTPBasicAuth(PRESTASHOP_API_KEY,""),
+        timeout=30
+    )
+    if get_response.status_code !=200
+    return {"ok": false,"status_code":get_response.status_code,"response": get_response.text
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <prestashop>
 <product>
