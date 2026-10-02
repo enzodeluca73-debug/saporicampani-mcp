@@ -119,7 +119,13 @@ def update_product(product_id: int, field: str, value: str):
             target = ET.SubElement(product, field)
         target.text = str(value)
 
-        # Remove read-only associations from the update payload.
+        # Remove fields returned by GET that are not writable through
+        # the PrestaShop product PUT endpoint.
+        for readonly_field in ("manufacturer_name", "quantity"):
+            node = product.find(readonly_field)
+            if node is not None:
+                product.remove(node)
+
         associations = product.find("associations")
         if associations is not None:
             product.remove(associations)
