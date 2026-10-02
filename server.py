@@ -86,25 +86,24 @@ def get_product(product_id):
 
 @mcp.tool()
 def update_product(product_id: int, field: str, value: str):
-    url = f"{PRESTASHOP_URL}/api/products/{product_id}"
-    get_response = requests.get(
-        url,
-        auth=HTTPBasicAuth(PRESTASHOP_API_KEY,""),
-        timeout=30
-    )
-    if get_response.status_code !=200
-    return {"ok": false,"status_code":get_response.status_code,"response": get_response.text
-    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<prestashop>
-<product>
-<id>{product_id}</id>
-<{field}>{value}</{field}>
-</product>
-</prestashop>"""
+    if not PRESTASHOP_API_KEY:
+        return {"error": "PRESTASHOP_API_KEY non configurata"}
 
-    response = requests.put(
+    url = f"{PRESTASHOP_URL}/api/products/{product_id}"
+
+    # PrestaShop supports PATCH for partial resource updates.
+    # This avoids resending required fields (for example price) when
+    # only one product field needs to be changed.
+    import xml.etree.ElementTree as ET
+    root = ET.Element("prestashop")
+    product = ET.SubElement(root, "product")
+    ET.SubElement(product, "id").text = str(product_id)
+    ET.SubElement(product, field).text = str(value)
+    xml = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+    response = requests.patch(
         url,
-        data=xml.encode("utf-8"),
+        data=xml,
         auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
         headers={"Content-Type": "application/xml"},
         timeout=30
@@ -115,6 +114,7 @@ def update_product(product_id: int, field: str, value: str):
         "status_code": response.status_code,
         "response": response.text
     }
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     mcp.run(transport="streamable-http",host="0.0.0.0", port=port)
