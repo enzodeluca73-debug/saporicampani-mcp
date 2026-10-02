@@ -117,7 +117,16 @@ def update_product(product_id: int, field: str, value: str):
         target = product.find(field)
         if target is None:
             target = ET.SubElement(product, field)
-        target.text = str(value)
+
+        # PrestaShop stores translatable product fields inside
+        # <language id="..."> child nodes. Update those children instead
+        # of assigning text to the outer field node.
+        language_nodes = target.findall("language")
+        if language_nodes:
+            for language_node in language_nodes:
+                language_node.text = str(value)
+        else:
+            target.text = str(value)
 
         # Remove fields returned by GET that are not writable through
         # the PrestaShop product PUT endpoint.
