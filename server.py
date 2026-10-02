@@ -96,7 +96,7 @@ def update_product(product_id: int, field: str, value: str):
 </product>
 </prestashop>"""
 
-    response = requests.patch(
+    response = requests.put(
         url,
         data=xml.encode("utf-8"),
         auth=HTTPBasicAuth(PRESTASHOP_API_KEY, ""),
